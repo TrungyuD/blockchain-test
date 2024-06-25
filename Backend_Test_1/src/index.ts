@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import 'dotenv/config'
 import axios from "axios";
 
-interface IGetBalanceResponse {
+interface IBalanceResponse {
 	jsonrpc: string;
 	id: string;
 	result: string;
@@ -28,11 +28,12 @@ export async function getETHBalance(timestamp: number): Promise<string> {
 		maxRetries: 10,
 		batchRequests: true,
 	}
-
 	const alchemy = new Alchemy(ALCHEMY_CONFIG);
 
+	// get holder of BAYC contract
 	const holders = await alchemy.nft.getOwnersForContract(ERC721_ADDRESS);
 
+	//  Get block at timestamp
 	const provider: any = new ethers.JsonRpcProvider(ETH_MAINNET_RPC);
 	const dater = new EthDater(provider);
 	const blockAtTimestamp = await dater.getDate(timestamp * 1000, true, false);
@@ -47,9 +48,9 @@ export async function getETHBalance(timestamp: number): Promise<string> {
 		};
 	});
 	let index = 0;
-	let ethTotal = BigNumber.from(0);
+	let ethBalance = BigNumber.from(0);
 
-	// chunk requests to call rpc
+	// chunk requests to call rpc to get balance of each holder
 	const batchRequestPromises = [];
 	while (index < requests.length) {
 		const batchRequests = requests.slice(index, index + CHUNK_REQUEST);
@@ -61,13 +62,13 @@ export async function getETHBalance(timestamp: number): Promise<string> {
 	
 	for await (const balanceResponse of balanceResponses) {
 		const balances = await balanceResponse.data;
-		ethTotal = balances.reduce((ethValue: BigNumber, balance: IGetBalanceResponse) => {
+		ethBalance = balances.reduce((ethValue: BigNumber, balance: IBalanceResponse) => {
 			return ethValue.add(BigNumber.from(balance.result));
-		}, ethTotal);
+		}, ethBalance);
 	}
 
 
-	const result = ethers.formatUnits(ethTotal.toString(), 18);
+	const result = ethers.formatUnits(ethBalance.toString(), 18);
 	console.log(`Total ETH balances of holders: ${result} ETH`);
 
 	return result;
