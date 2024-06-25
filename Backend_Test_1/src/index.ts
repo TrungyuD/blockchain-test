@@ -10,7 +10,7 @@ interface IBalanceResponse {
 	result: string;
 }
 
-const ERC721_ADDRESS = "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d";
+const BAYC_ADDRESS = "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d";
 const ETH_MAINNET_RPC = process.env.ETH_MAINNET_RPC!;
 const CHUNK_REQUEST = 200;
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
@@ -31,7 +31,7 @@ export async function getETHBalance(timestamp: number): Promise<string> {
 	const alchemy = new Alchemy(ALCHEMY_CONFIG);
 
 	// get holder of BAYC contract
-	const holders = await alchemy.nft.getOwnersForContract(ERC721_ADDRESS);
+	const holders = await alchemy.nft.getOwnersForContract(BAYC_ADDRESS);
 
 	//  Get block at timestamp
 	const provider: any = new ethers.JsonRpcProvider(ETH_MAINNET_RPC);
