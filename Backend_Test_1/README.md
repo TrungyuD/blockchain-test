@@ -22,6 +22,12 @@ However, sometimes in some case of real projects, we might apply a different app
 
 ## How to run 
 
+- copy env
+```bash
+cp .env.example .env
+```
+- Replace or fill ALCHEMY_API_KEY value 
+
 - Install dependencies
 ```bash
 yarn install
