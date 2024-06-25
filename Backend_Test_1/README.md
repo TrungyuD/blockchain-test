@@ -44,4 +44,4 @@ yarn dev
 ```
 
 ### Example
-You can check ``src/index.ts`` or ``tests/test-1.test.ts``, input is ``1719031179`` and the result is ``108034.060408852591088889 ETH``
+You can check ``src/index.ts`` or ``tests/index.test.ts``, input is ``1719031179`` and the result is ``108K ETH``
